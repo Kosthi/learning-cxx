@@ -25,28 +25,32 @@ public:
 
     // TODO: 实现移动构造器
     DynFibonacci(DynFibonacci &&other) noexcept {
-        cache = std::move(other.cache);
+        cache = other.cache;
         other.cache = nullptr;
         cached = other.cached;
+        other.cached = 0;
         capacity = other.capacity;
+        other.capacity = 0;
     }
 
     // TODO: 实现移动赋值
     // NOTICE: ⚠ 注意移动到自身问题 ⚠
     DynFibonacci &operator=(DynFibonacci &&other) noexcept {
         if (this != &other) {
-            cache = std::move(other.cache);
+            delete []cache;
+            cache = other.cache;
             other.cache = nullptr;
             cached = other.cached;
+            other.cached = 0;
             capacity = other.capacity;
+            other.capacity = 0;
         }
+        return *this;
     }
 
     // TODO: 实现析构器，释放缓存空间
     ~DynFibonacci() {
-        if (cache != nullptr) {
-            delete []cache;
-        }
+        delete []cache;
     }
 
     // TODO: 实现正确的缓存优化斐波那契计算
@@ -73,12 +77,6 @@ public:
             return cache[i];
         }
         ASSERT(false, "i out of range");
-    }
-
-    // NOTICE: 不要修改这个方法
-    size_t operator[](int i) const {
-        ASSERT(i <= cached, "i out of range");
-        return cache[i];
     }
 
     // NOTICE: 不要修改这个方法
